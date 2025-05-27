@@ -15,14 +15,14 @@ import org.springframework.ai.chat.client.ChatClient;
 public class TravelTipView extends VerticalLayout {
 
     private static final String PROMPT_TEMPLATE = """
-            You are an expert traveler with near infinite knowledge of the world.
-            You love to give travel tips to others, and you are always happy to help.
-
-            I am traveling to {destination} and I am interested in {interests}.
-            Currently, I am feeling {mood}.
-
-            What tips do you have for me?
-            """;
+        You are an expert traveler with near infinite knowledge of the world.
+        You love to give travel tips to others, and you are always happy to help.
+        
+        I am traveling to {destination} and I am interested in {interests}.
+        Currently, I am feeling {mood}.
+        
+        What tips do you have for me?
+        """;
 
     public TravelTipView(ChatClient.Builder builder) {
         var chatClient = builder
@@ -30,18 +30,20 @@ public class TravelTipView extends VerticalLayout {
 
         var ui = UI.getCurrent();
         var title = new H1("AI Travel Tips");
-        var form = new HorizontalLayout();
+        var form = new HorizontalLayout() {{
+            setWidthFull();
+            setAlignItems(Alignment.BASELINE);
+        }};
         var destination = new TextField("Destination");
         var interests = new TextField("Interests");
-        var mood = new Select<String>();
+        var mood = new Select<String>() {{
+            setLabel("Mood");
+            setItems("Excited", "Curious", "Relaxed", "Adventurous", "Nervous");
+        }};
         var submitButton = new Button("Get Travel Tips");
         var response = new Markdown("");
 
-        form.setSizeFull();
         form.add(destination, interests, mood, submitButton);
-        form.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
-        mood.setLabel("Mood");
-        mood.setItems("Excited", "Curious", "Relaxed", "Adventurous", "Nervous");
 
         submitButton.addClickListener(event -> {
             response.setContent("");
